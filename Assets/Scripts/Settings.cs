@@ -1,0 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public static class Settings 
+{
+    public static bool treadmillMode = false;
+    public static bool vrMode = false;
+}

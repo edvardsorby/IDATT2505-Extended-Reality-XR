@@ -15,12 +15,21 @@ public class TreadmillSingleton : MonoBehaviour
     public int Incline = 0;
 
     async void Start() {
-        Debug.Log("TEST");
 
-        Machine = new Treadmill();
-        await Machine.Connect(TreadmillName);
+        if (Settings.treadmillMode)
+        {
+            Debug.Log("Treadmill mode");
 
-        Debug.Log("Fitness Machine connected");
+            Machine = new Treadmill();
+            Debug.Log("Connecting to Fitness Machine...");
+            await Machine.Connect(TreadmillName);
+
+            Debug.Log("Fitness Machine connected");
+        } else
+        {
+            Debug.Log("Demo mode");
+        }
+
     }
 
     private void Awake() {

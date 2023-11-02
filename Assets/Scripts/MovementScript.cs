@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,21 +15,30 @@ public class MovementScript : MonoBehaviour
     public float playerSpeed = 0.0f;
     private float gravityValue = -9.81f;
 
+    private float speedStepGame = 0.28f;
+    private int speedStepTreadmill = 100;
+
+
     private float maxAngle = 25.0f;
     private float minAngle = 0;
     private float minSpeed = 0;
+    private float maxSpeedTreadmill = 20.0f;
+    private float maxSpeed;
 
-    private float angleStep = 0.1f;
+
+    private float angleStep = 1.0f;
     private float currentAngle = 0;
 
     public SkyboxCamera skyboxScript;
+
+    public LogicScript logicScript;
 
 
     // Start is called before the first frame update
     void Start()
     {
         controller = gameObject.AddComponent<CharacterController>();
-        
+        maxSpeed = maxSpeedTreadmill / 3.6f;
     }
 
     // Update is called once per frame
@@ -42,21 +52,11 @@ public class MovementScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            playerSpeed += 3.6f;
-            TreadmillSingleton.Instance.Speed += 100;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
-
+            IncreaseSpeed();
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            playerSpeed -= 3.6f;
-            TreadmillSingleton.Instance.Speed -= 100;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
-
-            if (playerSpeed < minSpeed)
-            {
-                playerSpeed = minSpeed;
-            }
+            DecreaseSpeed();
         }
 
         Vector3 move = new Vector3(0, 0, 1);
@@ -70,26 +70,11 @@ public class MovementScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Debug.Log("Up");
-            currentAngle += angleStep;
-            TreadmillSingleton.Instance.Incline += 1;
-            UpdateIncline();
+            IncreaseAngle();
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Debug.Log("Down");
-            currentAngle -= angleStep;
-
-            TreadmillSingleton.Instance.Incline -= 1;
-            UpdateIncline();
-        }
-        if (currentAngle < minAngle)
-        {
-            currentAngle = minAngle;
-        }
-        else if (currentAngle > maxAngle)
-        {
-            currentAngle = maxAngle;
+            DecreaseAngle();
         }
 
 
@@ -98,9 +83,11 @@ public class MovementScript : MonoBehaviour
 
         skyboxScript.SkyBoxRotation = -newRotation;
 
+        logicScript.SetSpeedText(playerSpeed);
+        logicScript.SetAngleText(currentAngle);
+        logicScript.SetDistanceText(controller.transform.position.z);
 
-        //Vector3 newRotation = new Vector3(currentAngle, 180, 0);
-        //ground.transform.eulerAngles = newRotation;
+    
 
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
@@ -122,20 +109,25 @@ public class MovementScript : MonoBehaviour
     {
         Debug.Log("Quitting game");
 
-        TreadmillSingleton.Instance.Speed = 0;
-        await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
-
-        TreadmillSingleton.Instance.Incline = 0;
-        await TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline);
-        Debug.Log("Resetting speed and angle");
+        if (Settings.treadmillMode)
+        {
 
 
+            TreadmillSingleton.Instance.Speed = 0;
+            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
 
-        //StartCoroutine(WaitCoroutine());
+            TreadmillSingleton.Instance.Incline = 0;
+            await TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline);
+            Debug.Log("Resetting speed and angle");
 
-        await TreadmillSingleton.Instance.Machine.Disconnect();
-        Debug.Log("Treadmill disconnected");
 
+
+            //StartCoroutine(WaitCoroutine());
+
+            await TreadmillSingleton.Instance.Machine.Disconnect();
+            Debug.Log("Treadmill disconnected");
+
+        }
 
         UnityEditor.EditorApplication.isPlaying = false;
         Application.Quit();
@@ -145,4 +137,65 @@ public class MovementScript : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
     }
+
+
+
+
+    async void IncreaseSpeed()
+    {
+        playerSpeed += speedStepGame;
+        if (playerSpeed > maxSpeed) playerSpeed = maxSpeed;
+
+
+        if (Settings.treadmillMode)
+        {
+            TreadmillSingleton.Instance.Speed += speedStepTreadmill;
+            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+        }
+
+    }
+
+    async void DecreaseSpeed()
+    {
+        playerSpeed -= speedStepGame;
+        if (playerSpeed < minSpeed) playerSpeed = minSpeed;
+
+        if (Settings.treadmillMode)
+        {
+            TreadmillSingleton.Instance.Speed -= speedStepTreadmill;
+            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+        }
+    }
+
+
+    async void IncreaseAngle()
+    {
+        Debug.Log("Up");
+        currentAngle += angleStep;
+
+
+        if (currentAngle > maxAngle) currentAngle = maxAngle;
+
+        if (Settings.treadmillMode)
+        {
+            TreadmillSingleton.Instance.Incline += Convert.ToInt32(Math.Round(angleStep))*10;
+            UpdateIncline();
+        }
+
+    }
+
+    async void DecreaseAngle()
+    {
+        Debug.Log("Down");
+        currentAngle -= angleStep;
+
+        if (currentAngle < minAngle) currentAngle = minAngle;
+
+        if (Settings.treadmillMode)
+        {
+            TreadmillSingleton.Instance.Incline -= Convert.ToInt32(Math.Round(angleStep))*10;
+            UpdateIncline();
+        }
+    }
+        
 }
