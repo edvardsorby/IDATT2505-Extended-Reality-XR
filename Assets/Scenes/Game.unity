@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.38227078, g: 0.4059093, b: 0.4631124, a: 1}
+  m_IndirectSpecularColor: {r: 0.38227093, g: 0.4059094, b: 0.4631127, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -611,7 +611,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 25.000055, y: -25}
+  m_AnchoredPosition: {x: 25, y: -25}
   m_SizeDelta: {x: -49.999886, y: -50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1059319416
@@ -1669,7 +1669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 1955718896}
   playerSpeed: 0
-  speedStepGame: 1.6
+  speedStepGame: 1.4
   skyboxScript: {fileID: 2006303559}
   logicScript: {fileID: 138420948}
 --- !u!114 &2006303559
@@ -1702,7 +1702,7 @@ MonoBehaviour:
   m_Device: 0
   m_PoseSource: 2
   m_PoseProviderComponent: {fileID: 0}
-  m_TrackingType: 0
+  m_TrackingType: 1
   m_UpdateType: 0
   m_UseRelativeTransform: 0
 --- !u!1660057539 &9223372036854775807

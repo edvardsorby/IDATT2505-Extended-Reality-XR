@@ -37,7 +37,7 @@ public class LogicScript : MonoBehaviour
 
     public void SetDistanceText(float distance, float step)
     {
-        string distanceString = "Distance: " + Math.Round(distance/step).ToString() + " m";
+        string distanceString = "Distance: " + Math.Round(distance/step/3.6).ToString() + " m";
         distanceText.text = distanceString;
     }
 }
