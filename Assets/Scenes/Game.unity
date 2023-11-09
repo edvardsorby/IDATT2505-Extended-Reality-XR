@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.38227078, g: 0.4059093, b: 0.4631124, a: 1}
+  m_IndirectSpecularColor: {r: 0.38227093, g: 0.4059094, b: 0.4631127, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -577,6 +577,7 @@ GameObject:
   - component: {fileID: 1139830338}
   - component: {fileID: 1139830340}
   - component: {fileID: 1139830341}
+  - component: {fileID: 1139830342}
   m_Layer: 0
   m_Name: SkyboxCamera
   m_TagString: Untagged
@@ -697,6 +698,24 @@ MonoBehaviour:
   - {fileID: 2100000, guid: cede08c9fc471e64884909cd4bbeaf59, type: 2}
   - {fileID: 2100000, guid: f15c336556dd74f40aaca655f7767970, type: 2}
   - {fileID: 2100000, guid: 4e154bf235e41704bbd6bbc6fd6c63f6, type: 2}
+--- !u!114 &1139830342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139830336}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2a9c34df4095f47b9ca8f975175f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Device: 0
+  m_PoseSource: 2
+  m_PoseProviderComponent: {fileID: 0}
+  m_TrackingType: 0
+  m_UpdateType: 0
+  m_UseRelativeTransform: 0
 --- !u!1 &1427080729
 GameObject:
   m_ObjectHideFlags: 0
@@ -1178,6 +1197,7 @@ GameObject:
   - component: {fileID: 1955718894}
   - component: {fileID: 1955718896}
   - component: {fileID: 1955718895}
+  - component: {fileID: 1955718897}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -1259,6 +1279,24 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1955718897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955718893}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2a9c34df4095f47b9ca8f975175f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Device: 0
+  m_PoseSource: 2
+  m_PoseProviderComponent: {fileID: 0}
+  m_TrackingType: 0
+  m_UpdateType: 0
+  m_UseRelativeTransform: 0
 --- !u!1 &2006303554
 GameObject:
   m_ObjectHideFlags: 0
@@ -1271,6 +1309,7 @@ GameObject:
   - component: {fileID: 2006303557}
   - component: {fileID: 2006303558}
   - component: {fileID: 2006303559}
+  - component: {fileID: 2006303560}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1347,6 +1386,24 @@ MonoBehaviour:
   MainCamera: {fileID: 1955718896}
   SkyCamera: {fileID: 1139830339}
   SkyBoxRotation: {x: 0, y: 0, z: 0}
+--- !u!114 &2006303560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2006303554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2a9c34df4095f47b9ca8f975175f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Device: 0
+  m_PoseSource: 2
+  m_PoseProviderComponent: {fileID: 0}
+  m_TrackingType: 0
+  m_UpdateType: 0
+  m_UseRelativeTransform: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
