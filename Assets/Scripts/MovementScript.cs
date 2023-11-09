@@ -15,7 +15,7 @@ public class MovementScript : MonoBehaviour
     public float playerSpeed = 0.0f;
     private float gravityValue = -9.81f;
 
-    private float speedStepGame = 0.28f;
+    public float speedStepGame = 1.8f;
     private int speedStepTreadmill = 100;
 
 
@@ -38,7 +38,7 @@ public class MovementScript : MonoBehaviour
     void Start()
     {
         controller = gameObject.AddComponent<CharacterController>();
-        maxSpeed = maxSpeedTreadmill / 3.6f;
+        maxSpeed = maxSpeedTreadmill * speedStepGame;
     }
 
     // Update is called once per frame
@@ -83,9 +83,9 @@ public class MovementScript : MonoBehaviour
 
         skyboxScript.SkyBoxRotation = -newRotation;
 
-        logicScript.SetSpeedText(playerSpeed);
+        logicScript.SetSpeedText(playerSpeed, speedStepGame);
         logicScript.SetAngleText(currentAngle);
-        logicScript.SetDistanceText(controller.transform.position.z);
+        logicScript.SetDistanceText(controller.transform.position.z, speedStepGame);
 
     
 

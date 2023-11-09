@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 138420943}
   - component: {fileID: 138420947}
   - component: {fileID: 138420948}
+  - component: {fileID: 138420949}
   m_Layer: 0
   m_Name: LogicManager
   m_TagString: Untagged
@@ -260,6 +261,18 @@ MonoBehaviour:
   speedText: {fileID: 1774415373}
   angleText: {fileID: 1498381829}
   distanceText: {fileID: 1683554803}
+--- !u!114 &138420949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138420941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cf9874d8e6ebdd4e8d87fbd7f2a1918, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &515170260
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,7 +286,7 @@ GameObject:
   - component: {fileID: 515170261}
   m_Layer: 0
   m_Name: Terrain (1)
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1291,7 +1304,7 @@ GameObject:
   - component: {fileID: 1932598971}
   m_Layer: 0
   m_Name: Terrain
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1553,6 +1566,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 1955718896}
   playerSpeed: 0
+  speedStepGame: 1.6
   skyboxScript: {fileID: 2006303559}
   logicScript: {fileID: 138420948}
 --- !u!114 &2006303559

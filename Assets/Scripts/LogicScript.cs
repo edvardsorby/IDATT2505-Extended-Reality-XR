@@ -24,8 +24,8 @@ public class LogicScript : MonoBehaviour
         //speedText.text = "speed";
     }
 
-    public void SetSpeedText(float speed) {
-        string speedString = "Speed: " + Math.Round(speed*3.6).ToString() + " km/h";
+    public void SetSpeedText(float speed, float step) {
+        string speedString = "Speed: " + Math.Round(speed/step).ToString() + " km/h";
         speedText.text = speedString;
     }
 
@@ -35,9 +35,9 @@ public class LogicScript : MonoBehaviour
         angleText.text = angleString;
     }
 
-    public void SetDistanceText(float distance)
+    public void SetDistanceText(float distance, float step)
     {
-        string distanceString = "Distance: " + Math.Round(distance).ToString() + " m";
+        string distanceString = "Distance: " + Math.Round(distance/step).ToString() + " m";
         distanceText.text = distanceString;
     }
 }
