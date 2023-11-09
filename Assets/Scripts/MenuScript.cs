@@ -15,24 +15,15 @@ public class MenuScript : MonoBehaviour
         Application.Quit();
     }
 
-    public void PlayVR()
-    {
-        Settings.treadmillMode = true;
-        Settings.vrMode = true;
-        ChangeScene("Game");
-    }
-
     public void Play()
     {
         Settings.treadmillMode = true;
-        Settings.vrMode = false;
         ChangeScene("Game");
     }
 
     public void PlayDemo()
     {
         Settings.treadmillMode = false;
-        Settings.vrMode = false;
         ChangeScene("Game");
     }
 }
