@@ -36,8 +36,6 @@ public class MovementScript : MonoBehaviour
 
     public GameObject pauseMenu;
 
-    private bool paused = false;
-
     private int pausedSpeed = 0;
 
     // Start is called before the first frame update
@@ -45,11 +43,29 @@ public class MovementScript : MonoBehaviour
     {
         controller = gameObject.AddComponent<CharacterController>();
         maxSpeed = maxSpeedTreadmill * speedStepGame;
+        Settings.paused = false;
     }
 
     // Update is called once per frame
     async void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+
+            Settings.paused = !Settings.paused;
+            if (Settings.paused)
+            {
+                PauseGame();
+            }
+            else
+            {
+                ResumeGame();
+            }
+        }
+
+        if (Settings.paused) return;
+
         groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
         {
@@ -98,19 +114,7 @@ public class MovementScript : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
 
-            paused = !paused;
-            if (paused)
-            {
-                PauseGame();
-            } else
-            {
-                ResumeGame();
-            }
-            //Quit();
-        }
     }
 
 
@@ -218,7 +222,7 @@ public class MovementScript : MonoBehaviour
 
     public async void PauseGame()
     {
-        paused = true;
+        Settings.paused = true;
         Time.timeScale = 0;
         pauseMenu.SetActive(true);
 
@@ -232,7 +236,7 @@ public class MovementScript : MonoBehaviour
 
     async public void ResumeGame()
     {
-        paused = false;
+        Settings.paused = false;
         Time.timeScale = 1;
         pauseMenu.SetActive(false);
 

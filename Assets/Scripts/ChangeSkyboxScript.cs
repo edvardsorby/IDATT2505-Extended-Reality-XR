@@ -24,6 +24,9 @@ public class ChangeSkyboxScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (Settings.paused) return;
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("Space");
