@@ -25,9 +25,7 @@ public class ChangeSkyboxScript : MonoBehaviour
     void Update()
     {
 
-        if (Settings.paused) return;
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (!Settings.paused && Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("Space");
 

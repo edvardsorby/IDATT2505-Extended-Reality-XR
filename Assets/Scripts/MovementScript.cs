@@ -150,8 +150,7 @@ public class MovementScript : MonoBehaviour
 
 
         SceneManager.LoadScene("MainMenu");
-        //UnityEditor.EditorApplication.isPlaying = false;
-        //Application.Quit();
+
     }
 
     IEnumerator WaitCoroutine()

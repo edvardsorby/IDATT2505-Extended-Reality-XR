@@ -6,6 +6,7 @@ public class MenuScript : MonoBehaviour
 
     public GameObject menuPage;
     public GameObject controlsPage;
+    public GameObject loadingText;
 
     public void ChangeScene(string sceneName)
     {
@@ -20,12 +21,14 @@ public class MenuScript : MonoBehaviour
 
     public void Play()
     {
+        ShowLoadingText();
         Settings.treadmillMode = true;
         ChangeScene("Game");
     }
 
     public void PlayDemo()
     {
+        ShowLoadingText();
         Settings.treadmillMode = false;
         ChangeScene("Game");
     }
@@ -40,5 +43,11 @@ public class MenuScript : MonoBehaviour
     {
         menuPage.SetActive(true);
         controlsPage.SetActive(false);
+    }
+
+    void ShowLoadingText()
+    {
+        menuPage.SetActive(false);
+        loadingText.SetActive(true);
     }
 }
