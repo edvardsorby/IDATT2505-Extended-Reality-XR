@@ -16,7 +16,7 @@ public class MovementScript : MonoBehaviour
     public float playerSpeed = 0.0f;
     private float gravityValue = -9.81f;
 
-    public float speedStepGame = 1.8f;
+    public float speedStepGame = 1.4f;
     private int speedStepTreadmill = 100;
 
 
