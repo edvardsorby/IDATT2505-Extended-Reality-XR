@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static TreadmillSingleton;
@@ -120,7 +121,7 @@ public class MovementScript : MonoBehaviour
 
     async void UpdateIncline()
     {
-        await TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline);
+        await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline));
     }
 
 
@@ -133,17 +134,17 @@ public class MovementScript : MonoBehaviour
 
 
             TreadmillSingleton.Instance.Speed = 0;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
 
             TreadmillSingleton.Instance.Incline = 0;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline);
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline));
             Debug.Log("Resetting speed and angle");
 
 
 
             //StartCoroutine(WaitCoroutine());
 
-            await TreadmillSingleton.Instance.Machine.Disconnect();
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Disconnect());
             Debug.Log("Treadmill disconnected");
 
         }
@@ -170,7 +171,7 @@ public class MovementScript : MonoBehaviour
         if (Settings.treadmillMode)
         {
             TreadmillSingleton.Instance.Speed += speedStepTreadmill;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
         }
 
     }
@@ -183,7 +184,7 @@ public class MovementScript : MonoBehaviour
         if (Settings.treadmillMode)
         {
             TreadmillSingleton.Instance.Speed -= speedStepTreadmill;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
         }
     }
 
@@ -229,7 +230,7 @@ public class MovementScript : MonoBehaviour
         {
             pausedSpeed = TreadmillSingleton.Instance.Speed;
             TreadmillSingleton.Instance.Speed = 0;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
         }
     }
 
@@ -242,7 +243,7 @@ public class MovementScript : MonoBehaviour
         if (Settings.treadmillMode)
         {
             TreadmillSingleton.Instance.Speed = pausedSpeed;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
         }
     }
 }
