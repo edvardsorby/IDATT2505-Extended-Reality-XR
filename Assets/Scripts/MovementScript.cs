@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static TreadmillSingleton;
 
 public class MovementScript : MonoBehaviour
@@ -33,6 +34,11 @@ public class MovementScript : MonoBehaviour
 
     public LogicScript logicScript;
 
+    public GameObject pauseMenu;
+
+    private bool paused = false;
+
+    private int pausedSpeed = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -94,7 +100,16 @@ public class MovementScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Quit();
+
+            paused = !paused;
+            if (paused)
+            {
+                PauseGame();
+            } else
+            {
+                ResumeGame();
+            }
+            //Quit();
         }
     }
 
@@ -105,7 +120,7 @@ public class MovementScript : MonoBehaviour
     }
 
 
-    async void Quit()
+    public async void Quit()
     {
         Debug.Log("Quitting game");
 
@@ -129,8 +144,10 @@ public class MovementScript : MonoBehaviour
 
         }
 
-        UnityEditor.EditorApplication.isPlaying = false;
-        Application.Quit();
+
+        SceneManager.LoadScene("MainMenu");
+        //UnityEditor.EditorApplication.isPlaying = false;
+        //Application.Quit();
     }
 
     IEnumerator WaitCoroutine()
@@ -198,4 +215,31 @@ public class MovementScript : MonoBehaviour
         }
     }
         
+
+    public async void PauseGame()
+    {
+        paused = true;
+        Time.timeScale = 0;
+        pauseMenu.SetActive(true);
+
+        if (Settings.treadmillMode)
+        {
+            pausedSpeed = TreadmillSingleton.Instance.Speed;
+            TreadmillSingleton.Instance.Speed = 0;
+            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+        }
+    }
+
+    async public void ResumeGame()
+    {
+        paused = false;
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false);
+
+        if (Settings.treadmillMode)
+        {
+            TreadmillSingleton.Instance.Speed = pausedSpeed;
+            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+        }
+    }
 }
