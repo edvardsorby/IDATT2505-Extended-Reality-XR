@@ -7,7 +7,6 @@ public class TerrainLoader : MonoBehaviour
     private GameObject[] terrain;
     private GameObject[] player;
 
-    // Start is called before the first frame update
     void Start()
     {
         terrain = GameObject.FindGameObjectsWithTag("Terrain");
