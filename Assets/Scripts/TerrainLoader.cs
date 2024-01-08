@@ -7,13 +7,15 @@ public class TerrainLoader : MonoBehaviour
     private GameObject[] terrain;
     private GameObject[] player;
 
+    //Finds the "Terain" objects and the "Player" object
     void Start()
     {
         terrain = GameObject.FindGameObjectsWithTag("Terrain");
         player = GameObject.FindGameObjectsWithTag("Player");
     }
 
-    // Update is called once per frame
+    //If the player object has moved 200 units in front of the last terrain object, 
+    //it will be teleported infront of the player to repeat the terrain endlessly.
     void Update()
     {
         foreach (GameObject a in terrain)

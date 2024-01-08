@@ -1,15 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static TreadmillSingleton;
 
 public class MovementScript : MonoBehaviour
 {
 
-    //public GameObject ground;
     public Camera camera;
     private CharacterController controller;
     private Vector3 playerVelocity;
@@ -82,9 +78,9 @@ public class MovementScript : MonoBehaviour
             DecreaseSpeed();
         }
 
+        // Moves the player forward
         Vector3 move = new Vector3(0, 0, 1);
         controller.Move(move * Time.deltaTime * playerSpeed);
-
         if (move != Vector3.zero)
         {
             gameObject.transform.forward = move;
@@ -101,26 +97,27 @@ public class MovementScript : MonoBehaviour
         }
 
 
+        // Updates the angle inside the game
         Vector3 newRotation = new Vector3(currentAngle, 0, 0);
         camera.transform.eulerAngles = newRotation;
-
         skyboxScript.SkyBoxRotation = -newRotation;
 
+        // Updates the UI
         logicScript.SetSpeedText(playerSpeed, speedStepGame);
         logicScript.SetAngleText(currentAngle);
         logicScript.SetDistanceText(controller.transform.position.z, speedStepGame);
 
     
-
+        // Moves the player in the y-direction (gravity)
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
 
 
     }
 
-
     async void UpdateIncline()
     {
+        // Updates the incline of the treadmill in a thread to avoid stuttering in the game
         await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline));
     }
 
@@ -132,7 +129,6 @@ public class MovementScript : MonoBehaviour
         if (Settings.treadmillMode)
         {
 
-
             TreadmillSingleton.Instance.Speed = 0;
             await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
 
@@ -140,27 +136,14 @@ public class MovementScript : MonoBehaviour
             await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline));
             Debug.Log("Resetting speed and angle");
 
-
-
-            //StartCoroutine(WaitCoroutine());
-
             await Task.Run(() => TreadmillSingleton.Instance.Machine.Disconnect());
             Debug.Log("Treadmill disconnected");
 
         }
 
-
         SceneManager.LoadScene("MainMenu");
 
     }
-
-    IEnumerator WaitCoroutine()
-    {
-        yield return new WaitForSeconds(5);
-    }
-
-
-
 
     async void IncreaseSpeed()
     {
@@ -171,6 +154,7 @@ public class MovementScript : MonoBehaviour
         if (Settings.treadmillMode)
         {
             TreadmillSingleton.Instance.Speed += speedStepTreadmill;
+            // Changes the speed of the treadmill in another thread to avoid stuttering in the game
             await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
         }
 
@@ -184,6 +168,7 @@ public class MovementScript : MonoBehaviour
         if (Settings.treadmillMode)
         {
             TreadmillSingleton.Instance.Speed -= speedStepTreadmill;
+            // Changes the speed of the treadmill in another thread to avoid stuttering in the game
             await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
         }
     }

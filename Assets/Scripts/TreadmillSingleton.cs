@@ -10,7 +10,7 @@ public class TreadmillSingleton : MonoBehaviour
     public static TreadmillSingleton Instance {get; private set;}
 
     public Treadmill Machine;
-    public string TreadmillName = "WoodwayXXXX";
+    public string TreadmillName = "WoodwayXXXX"; // The Bluetooth name of the fitness machine to connect to
     public int Speed = 0;
     public int Incline = 0;
 
