@@ -5,5 +5,6 @@ using UnityEngine;
 public static class Settings 
 {
     public static bool treadmillMode = false;
-    public static bool vrMode = false;
+
+    public static bool paused = true;
 }

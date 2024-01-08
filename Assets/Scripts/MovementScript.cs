@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
-using static TreadmillSingleton;
+using UnityEngine.SceneManagement;
 
 public class MovementScript : MonoBehaviour
 {
 
-    //public GameObject ground;
     public Camera camera;
     private CharacterController controller;
     private Vector3 playerVelocity;
@@ -15,7 +13,7 @@ public class MovementScript : MonoBehaviour
     public float playerSpeed = 0.0f;
     private float gravityValue = -9.81f;
 
-    private float speedStepGame = 0.28f;
+    public float speedStepGame = 1.4f;
     private int speedStepTreadmill = 100;
 
 
@@ -33,17 +31,38 @@ public class MovementScript : MonoBehaviour
 
     public LogicScript logicScript;
 
+    public GameObject pauseMenu;
+
+    private int pausedSpeed = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         controller = gameObject.AddComponent<CharacterController>();
-        maxSpeed = maxSpeedTreadmill / 3.6f;
+        maxSpeed = maxSpeedTreadmill * speedStepGame;
+        Settings.paused = false;
     }
 
     // Update is called once per frame
     async void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+
+            Settings.paused = !Settings.paused;
+            if (Settings.paused)
+            {
+                PauseGame();
+            }
+            else
+            {
+                ResumeGame();
+            }
+        }
+
+        if (Settings.paused) return;
+
         groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
         {
@@ -59,9 +78,9 @@ public class MovementScript : MonoBehaviour
             DecreaseSpeed();
         }
 
+        // Moves the player forward
         Vector3 move = new Vector3(0, 0, 1);
         controller.Move(move * Time.deltaTime * playerSpeed);
-
         if (move != Vector3.zero)
         {
             gameObject.transform.forward = move;
@@ -78,68 +97,53 @@ public class MovementScript : MonoBehaviour
         }
 
 
+        // Updates the angle inside the game
         Vector3 newRotation = new Vector3(currentAngle, 0, 0);
         camera.transform.eulerAngles = newRotation;
-
         skyboxScript.SkyBoxRotation = -newRotation;
 
-        logicScript.SetSpeedText(playerSpeed);
+        // Updates the UI
+        logicScript.SetSpeedText(playerSpeed, speedStepGame);
         logicScript.SetAngleText(currentAngle);
-        logicScript.SetDistanceText(controller.transform.position.z);
+        logicScript.SetDistanceText(controller.transform.position.z, speedStepGame);
 
     
-
+        // Moves the player in the y-direction (gravity)
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Quit();
-        }
-    }
 
+    }
 
     async void UpdateIncline()
     {
-        await TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline);
+        // Updates the incline of the treadmill in a thread to avoid stuttering in the game
+        await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline));
     }
 
 
-    async void Quit()
+    public async void Quit()
     {
         Debug.Log("Quitting game");
 
         if (Settings.treadmillMode)
         {
 
-
             TreadmillSingleton.Instance.Speed = 0;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
 
             TreadmillSingleton.Instance.Incline = 0;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline);
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetInclination((ushort)TreadmillSingleton.Instance.Incline));
             Debug.Log("Resetting speed and angle");
 
-
-
-            //StartCoroutine(WaitCoroutine());
-
-            await TreadmillSingleton.Instance.Machine.Disconnect();
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Disconnect());
             Debug.Log("Treadmill disconnected");
 
         }
 
-        UnityEditor.EditorApplication.isPlaying = false;
-        Application.Quit();
+        SceneManager.LoadScene("MainMenu");
+
     }
-
-    IEnumerator WaitCoroutine()
-    {
-        yield return new WaitForSeconds(5);
-    }
-
-
-
 
     async void IncreaseSpeed()
     {
@@ -150,7 +154,8 @@ public class MovementScript : MonoBehaviour
         if (Settings.treadmillMode)
         {
             TreadmillSingleton.Instance.Speed += speedStepTreadmill;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+            // Changes the speed of the treadmill in another thread to avoid stuttering in the game
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
         }
 
     }
@@ -163,7 +168,8 @@ public class MovementScript : MonoBehaviour
         if (Settings.treadmillMode)
         {
             TreadmillSingleton.Instance.Speed -= speedStepTreadmill;
-            await TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed);
+            // Changes the speed of the treadmill in another thread to avoid stuttering in the game
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
         }
     }
 
@@ -198,4 +204,31 @@ public class MovementScript : MonoBehaviour
         }
     }
         
+
+    public async void PauseGame()
+    {
+        Settings.paused = true;
+        Time.timeScale = 0;
+        pauseMenu.SetActive(true);
+
+        if (Settings.treadmillMode)
+        {
+            pausedSpeed = TreadmillSingleton.Instance.Speed;
+            TreadmillSingleton.Instance.Speed = 0;
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
+        }
+    }
+
+    async public void ResumeGame()
+    {
+        Settings.paused = false;
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false);
+
+        if (Settings.treadmillMode)
+        {
+            TreadmillSingleton.Instance.Speed = pausedSpeed;
+            await Task.Run(() => TreadmillSingleton.Instance.Machine.Controller.SetTargetSpeed((ushort)TreadmillSingleton.Instance.Speed));
+        }
+    }
 }
